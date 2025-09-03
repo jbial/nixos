@@ -17,6 +17,15 @@ in {
     ".config/ghostty".source = "${dotfiles}/.config/ghostty";
     ".config/nvim".source    = "${dotfiles}/.config/nvim";
   };
+
+  home.packages = with pkgs; [
+    home-manager
+    tmux
+    btop
+    neofetch
+    uv
+  ];
+
   home.pointerCursor = {
     package = pkgs.vanilla-dmz;
     name = "Vanilla-DMZ";
@@ -57,13 +66,27 @@ in {
     policies.DisableTelemetry = true;
   };
 
-  home.packages = with pkgs; [
-    home-manager
-    tmux
-    btop
-    neofetch
-    uv
-  ];
+  # startup ssh agent and add pkeys
+  services.ssh-agent.enable = true;
+  systemd.user.services."ssh-add-all" = {
+    Unit = {
+      Description = "Add all SSH private keys to ssh-agent";
+      After = [ "ssh-agent.service" ];
+      Wants = [ "ssh-agent.service" ];
+    };
+    Service = {
+      Type = "oneshot";
+      Environment = "SSH_AUTH_SOCK=%t/ssh-agent";
+      ExecStart = pkgs.writeShellScript "ssh-add-all" ''
+        shopt -s nullglob
+        for k in "$HOME"/.ssh/id_*; do
+          [[ "$k" == *.pub ]] && continue
+          ${pkgs.openssh}/bin/ssh-add -q "$k" || true
+        done
+      '';
+    };
+    Install.WantedBy = [ "default.target" ];
+  };
 
   home.activation.setupDotfiles = lib.hm.dag.entryAfter ["installPackages"] ''
     echo "Running dotfile setup..."

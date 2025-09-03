@@ -22,7 +22,11 @@
         }
       ];
     };
+
+    homeConfigurations.tycho = home-manager.lib.homeManagerConfiguration {
+      pkgs = nixpkgs.legacyPackages.x86_64-linux;  # REQUIRED
+      modules = [ ./home/tycho/home.nix ];
+    };
   };
-  
 }
 
