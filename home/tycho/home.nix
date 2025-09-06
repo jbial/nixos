@@ -61,7 +61,7 @@ in {
   };
   programs.firefox = {
     enable = true;
-    package = pkgs.firefox-beta;
+    package = pkgs.firefox;
     policies.Homepage.StartPage = "https://nixos.org";
     policies.DisableTelemetry = true;
   };
