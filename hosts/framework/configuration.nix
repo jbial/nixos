@@ -15,15 +15,15 @@
   networking.hostName = "machine";
   networking.networkmanager.enable = true;
 
-  time.timeZone = "America/New_York";
+  time.timeZone = "America/Chicago";
   i18n.defaultLocale = "en_US.UTF-8";
   console = {
     font = "Lat2-Terminus16";
     useXkbConfig = true; # use xkb.options in tty.
   };
 
-  hardware.enableAllFirmware = true;
   nixpkgs.config.allowUnfree = true;
+  hardware.enableAllFirmware = true;
 
   fonts.fontDir.enable = true;
   fonts.packages = [ pkgs.nerd-fonts.zed-mono ];
@@ -65,6 +65,7 @@
   environment.systemPackages = with pkgs; [
     wl-clipboard
     tree
+    networkmanagerapplet
     git
     vim
     unzip
@@ -73,9 +74,12 @@
     mako
     waybar
     brightnessctl
+    wttrbar
     pamixer
+    alsa-utils
     wget
     curl
+    hyprland
     hypridle
     hyprlock
     hyprpaper
@@ -90,16 +94,17 @@
   programs.nix-ld = {
     enable = true;
     libraries = with pkgs; [
-      zlib zstd stdenv.cc.cc curl openssl attr libssh bzip2 libxml2 acl libsodium util-linux xz systemd
+      zlib zstd stdenv.cc.cc curl openssl attr libssh bzip2 libxml2 acl libsodium util-linux xz tk tcl
     ];
   };
 
   ### Service configurations
+  services.upower.enable = true;
 
   # enable fingerprint
   services.fprintd.enable = true;
 
-  # suspend on lid close → then hibernate
+  # suspend on lid close →  then hibernate
   services.logind = {
     lidSwitch = "suspend-then-hibernate";
     lidSwitchExternalPower = "suspend-then-hibernate";
@@ -135,9 +140,6 @@
       "DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus"
     ];
   };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
 
   services.pipewire = {
     enable = true;

@@ -6,7 +6,7 @@ let
     owner = "jbial";
     repo = ".dotfiles";
     rev = "master"; # or commit
-    sha256 = "N7z9c63mhrr2hLklgmv38bWF8ZTDE6V1G4qgaLKycUI=";
+    sha256 = "1x45h32dbh666zz4xrvzidm06ql32fqkvp3llg3b5awp8ppq4cnr";
   };
 in {
   home.username = "tycho";
@@ -24,6 +24,11 @@ in {
     btop
     neofetch
     uv
+    clang
+    lldb
+    gnumake
+    fzf
+    nodejs
   ];
 
   home.pointerCursor = {
@@ -32,6 +37,13 @@ in {
     size = 24;
     x11.enable = true;
     gtk.enable = true;
+  };
+
+  programs.neovim = {
+    enable = true;
+    plugins = [
+      (pkgs.vimPlugins.nvim-treesitter.withPlugins (p: [ p.c p.java ]))
+    ];
   };
 
   programs.zsh = {
