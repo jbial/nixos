@@ -24,6 +24,19 @@
 
   nixpkgs.config.allowUnfree = true;
   hardware.enableAllFirmware = true;
+  hardware.bluetooth = {
+    enable = true;
+    powerOnBoot = true;
+    settings = {
+      General = {
+        Experimental = true;
+        FastConnectable = true;
+      };
+      Policy = {
+        AutoEnable = true;
+      };
+    };
+  };
 
   fonts.fontDir.enable = true;
   fonts.packages = [ pkgs.nerd-fonts.zed-mono ];
@@ -99,6 +112,7 @@
   };
 
   ### Service configurations
+  services.blueman.enable = true;
   services.upower.enable = true;
 
   # enable fingerprint
